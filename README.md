@@ -11,6 +11,7 @@ MCSManager 的实例根目录会放在项目根目录的 `instances/` 下。`dat
 - `compose.yaml`: MCSManager 主栈。
 - `compose.frp.yml`: 可选 Sakura Frp 客户端。
 - `.env.example`: 部署参数模板。
+- `instances/`: MCSManager 实例目录，会提交到 GitHub。
 - `scripts/init-env.sh`: 在目标服务器上生成 `.env` 和持久化目录。
 - `scripts/mcsm.sh`: MCSManager 常用操作封装。
 - `scripts/frp.sh`: Sakura Frp 客户端常用操作封装。

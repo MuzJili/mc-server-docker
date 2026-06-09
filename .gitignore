@@ -1,7 +1,6 @@
 .DS_Store
 .env
 data/
-instances/
 logs/
 backups/
 *.log
