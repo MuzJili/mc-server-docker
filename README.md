@@ -39,7 +39,7 @@ http://127.0.0.1:23333
 - 端口：`.env` 里的 `MCSM_DAEMON_PORT`，默认 `24444`，或 Sakura Frp 的 Daemon 远程端口
 - 密钥：启动后执行 `./scripts/mcsm.sh key` 查看
 
-如果你是在 NUC 本机浏览器打开面板，可以填 `127.0.0.1:24444`。如果你是通过 Sakura Frp 或外部电脑打开面板，必须给 Daemon 也建一条 Sakura 隧道，并在节点里填这条 Daemon 隧道的公网地址和端口。不要在远程浏览器里填 `127.0.0.1`，那会连到当前电脑自己。
+节点地址不建议填 `127.0.0.1` 作为长期配置。NUC 本机浏览器访问 `127.0.0.1:24444` 时会命中 Daemon，但 Web 容器后台访问 `127.0.0.1` 时会访问 Web 容器自己。更稳的做法是：局域网使用 NUC 的 LAN IP，并把 `MCSM_DAEMON_BIND` 设为 `0.0.0.0`；Sakura Frp 远程访问则填 Daemon 那条隧道的公网地址和端口。
 
 ## Sakura Frp
 

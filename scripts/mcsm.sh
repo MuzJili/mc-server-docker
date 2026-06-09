@@ -79,11 +79,11 @@ case "${1:-}" in
     echo
     echo
     echo "Node address guidance:"
-    echo "  On the NUC browser: address=127.0.0.1, port=${MCSM_DAEMON_PORT:-24444}"
-    echo "  On LAN browser: set MCSM_DAEMON_BIND=0.0.0.0, then address=<NUC_LAN_IP>, port=${MCSM_DAEMON_PORT:-24444}"
-    echo "  Through Sakura Frp: address=<Daemon tunnel host>, port=<Daemon tunnel remote port>"
+    echo "  Recommended through Sakura Frp: address=<Daemon tunnel host>, port=<Daemon tunnel remote port>"
+    echo "  Recommended on LAN: set MCSM_DAEMON_BIND=0.0.0.0, then address=<NUC_LAN_IP>, port=${MCSM_DAEMON_PORT:-24444}"
+    echo "  Localhost is only for NUC-browser testing: address=127.0.0.1, port=${MCSM_DAEMON_PORT:-24444}"
     echo
-    echo "Do not use 127.0.0.1 as the daemon address when your browser is outside the NUC."
+    echo "Do not use 127.0.0.1 as a long-term node address for Docker-separated Web/Daemon."
     ;;
   *)
     usage
