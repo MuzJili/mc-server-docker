@@ -2,7 +2,7 @@
 
 这个目录准备的是一个只用预构建镜像的游戏服务器 Docker 部署栈，不在本机构建镜像。
 
-核心服务是 MCSManager Web + Daemon。Daemon 挂载宿主机 Docker socket，用于在 Linux Docker 主机上创建和管理游戏实例。这个仓库只部署管理底座，不定义、不启动任何 Minecraft、Terraria 或其他游戏实例；实例由你后续在 MCSManager 中自行创建。默认管理端口只绑定到 NUC 的 `127.0.0.1`，再由 Sakura Frp 应用程序穿透出去。
+核心服务是 MCSManager Web + Daemon。Daemon 挂载宿主机 Docker socket，用于在 Linux Docker 主机上创建和管理游戏实例。这个仓库只部署管理底座，不定义、不启动任何 Minecraft、Terraria 或其他游戏实例；实例由你后续在 MCSManager 中自行创建。默认按局域网模式暴露管理端口，使用 NUC 的 LAN IP 访问。
 
 MCSManager 的实例根目录会放在项目根目录的 `instances/` 下。`data/` 只保存 MCSManager 自身配置和日志，游戏实例不会落在容器 root 目录里。
 
@@ -27,10 +27,10 @@ docker compose -f compose.yaml pull
 docker compose -f compose.yaml up -d
 ```
 
-然后在 NUC 本机或通过 Sakura Frp 访问：
+然后在局域网内访问：
 
 ```text
-http://127.0.0.1:23333
+http://<NUC_LAN_IP>:23333
 ```
 
 首次进入面板后，在“节点”里添加 Daemon：
@@ -39,11 +39,13 @@ http://127.0.0.1:23333
 - 端口：`.env` 里的 `MCSM_DAEMON_PORT`，默认 `24444`，或 Sakura Frp 的 Daemon 远程端口
 - 密钥：启动后执行 `./scripts/mcsm.sh key` 查看
 
-节点地址不建议填 `127.0.0.1` 作为长期配置。NUC 本机浏览器访问 `127.0.0.1:24444` 时会命中 Daemon，但 Web 容器后台访问 `127.0.0.1` 时会访问 Web 容器自己。更稳的做法是：局域网使用 NUC 的 LAN IP，并把 `MCSM_DAEMON_BIND` 设为 `0.0.0.0`；Sakura Frp 远程访问则填 Daemon 那条隧道的公网地址和端口。
+节点地址填 NUC 的局域网 IP。不要填 `127.0.0.1` 作为长期配置；NUC 本机浏览器访问 `127.0.0.1:24444` 时会命中 Daemon，但 Web 容器后台访问 `127.0.0.1` 时会访问 Web 容器自己。
+
+建议在路由器里给 NUC 做 DHCP 静态绑定，让它一直拿到同一个局域网 IP。比在 NUC 系统里手写静态 IP 更省心，也更不容易和路由器 DHCP 池冲突。
 
 ## Sakura Frp
 
-NUC 在内网时，推荐直接使用 Sakura Frp 应用程序管理隧道。Docker 中的 `compose.frp.yml` 只是备用方案。MCSManager 需要同时穿透 Web 和 Daemon；游戏端口等你自己建实例后再按实际端口添加：
+如果还需要公网访问，可以继续使用 Sakura Frp 应用程序管理隧道。Docker 中的 `compose.frp.yml` 只是备用方案。MCSManager 需要同时穿透 Web 和 Daemon；游戏端口等你自己建实例后再按实际端口添加：
 
 - MCSManager Web：`23333/tcp`
 - MCSManager Daemon：`24444/tcp`
@@ -88,13 +90,13 @@ ${MCSM_INSTANCE_ROOT}
 <当前项目目录>/instances
 ```
 
-创建实例时建议把宿主机端口绑定到 `127.0.0.1`，再由 Sakura Frp 应用程序穿透对应端口。示例配置见 `docs/MCSMANAGER_INSTANCES.md`。
+创建实例时，如果希望局域网玩家直连，宿主机端口绑定到 `0.0.0.0` 或 NUC 的局域网 IP；如果只想走 Sakura Frp，再绑定到 `127.0.0.1`。示例配置见 `docs/MCSMANAGER_INSTANCES.md`。
 
 ## 注意
 
 - MCSManager 的 Docker 隔离能力面向 Linux Docker 主机；当前目录只准备文件。
 - 当前 Compose 不包含任何游戏实例服务，也不会帮你构建或启动实例。
-- 默认管理端口只监听 `127.0.0.1`。如果要给局域网设备直连，把对应 `*_BIND` 改成 `0.0.0.0`。
+- 默认管理端口监听 `0.0.0.0`，用于局域网访问。如果只想本机或 Sakura 访问，把对应 `*_BIND` 改成 `127.0.0.1`。
 - 如果目标 Linux 主机没有 `/etc/timezone`，删除 `compose.yaml` 里对应 bind mount。
 - 公网访问时至少穿透 `23333/tcp`、`24444/tcp`，以及你后续手动创建实例时配置的实际游戏端口。
 

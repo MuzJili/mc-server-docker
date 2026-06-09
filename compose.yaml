@@ -14,7 +14,7 @@ services:
     depends_on:
       - mcsm-daemon
     ports:
-      - "${MCSM_WEB_BIND:-127.0.0.1}:${MCSM_WEB_PORT:-23333}:23333/tcp"
+      - "${MCSM_WEB_BIND:-0.0.0.0}:${MCSM_WEB_PORT:-23333}:23333/tcp"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${MCSM_ROOT:?Set MCSM_ROOT in .env or run scripts/init-env.sh}/mcsmanager/web/data:/opt/mcsmanager/web/data
@@ -28,7 +28,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-game-panel}-mcsm-daemon
     restart: unless-stopped
     ports:
-      - "${MCSM_DAEMON_BIND:-127.0.0.1}:${MCSM_DAEMON_PORT:-24444}:24444/tcp"
+      - "${MCSM_DAEMON_BIND:-0.0.0.0}:${MCSM_DAEMON_PORT:-24444}:24444/tcp"
     environment:
       MCSM_DOCKER_WORKSPACE_PATH: ${MCSM_INSTANCE_ROOT:?Set MCSM_INSTANCE_ROOT in .env or run scripts/init-env.sh}
     volumes:
