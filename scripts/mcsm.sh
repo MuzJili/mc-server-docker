@@ -20,7 +20,7 @@ Commands:
   restart    Restart MCSManager Web + Daemon
   logs       Follow MCSManager logs
   status     Show service status
-  key        Print daemon global.json to get the node key
+  key        Print daemon key/config path and node address guidance
 USAGE
 }
 
@@ -68,11 +68,25 @@ case "${1:-}" in
       echo "Start the stack once, then run this command again." >&2
       exit 1
     fi
+    echo "Daemon config file:"
+    echo "  $CONFIG_FILE"
+    echo
+    echo "Possible daemon key fields:"
+    sed -nE 's/.*"(key|apiKey|apikey|secret|token)"[[:space:]]*:[[:space:]]*"([^"]+)".*/  \1 = \2/p' "$CONFIG_FILE" || true
+    echo
+    echo "Raw config:"
     cat "$CONFIG_FILE"
+    echo
+    echo
+    echo "Node address guidance:"
+    echo "  On the NUC browser: address=127.0.0.1, port=${MCSM_DAEMON_PORT:-24444}"
+    echo "  On LAN browser: set MCSM_DAEMON_BIND=0.0.0.0, then address=<NUC_LAN_IP>, port=${MCSM_DAEMON_PORT:-24444}"
+    echo "  Through Sakura Frp: address=<Daemon tunnel host>, port=<Daemon tunnel remote port>"
+    echo
+    echo "Do not use 127.0.0.1 as the daemon address when your browser is outside the NUC."
     ;;
   *)
     usage
     exit 1
     ;;
 esac
-

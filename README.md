@@ -35,9 +35,11 @@ http://127.0.0.1:23333
 
 首次进入面板后，在“节点”里添加 Daemon：
 
-- 地址：服务器公网 IP 或反代域名
-- 端口：`.env` 里的 `MCSM_DAEMON_PORT`，默认 `24444`
+- 地址：当前浏览器能直接访问到的 Daemon 地址
+- 端口：`.env` 里的 `MCSM_DAEMON_PORT`，默认 `24444`，或 Sakura Frp 的 Daemon 远程端口
 - 密钥：启动后执行 `./scripts/mcsm.sh key` 查看
+
+如果你是在 NUC 本机浏览器打开面板，可以填 `127.0.0.1:24444`。如果你是通过 Sakura Frp 或外部电脑打开面板，必须给 Daemon 也建一条 Sakura 隧道，并在节点里填这条 Daemon 隧道的公网地址和端口。不要在远程浏览器里填 `127.0.0.1`，那会连到当前电脑自己。
 
 ## Sakura Frp
 
@@ -69,6 +71,8 @@ docker compose -f compose.yaml -f compose.frp.yml up -d sakura-frpc
 ```
 
 详细说明见 `docs/SAKURA_FRP.md`。
+
+如果面板提示“网络连接失败”或“网页直连失败”，优先检查 Daemon 端口是否也被穿透，以及节点地址是否填的是 Daemon 隧道地址。Web 能打开不代表 Daemon 也能被浏览器访问。更多排错见 `docs/MCSMANAGER_NETWORK.md`。
 
 ## 实例创建
 

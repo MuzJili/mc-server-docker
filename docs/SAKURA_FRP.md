@@ -33,7 +33,11 @@ docker compose -f compose.yaml -f compose.frp.yml up -d sakura-frpc
 
 MCSManager 的 Web 和 Daemon 都需要外部浏览器可访问。只穿透 Web 端口时，面板可能打开，但节点连接或控制台功能会异常。
 
+在 MCSManager 节点配置里，Daemon 地址要填 Daemon 隧道的公网地址和远程端口。不要填 `127.0.0.1`，除非你就是在 NUC 本机浏览器里打开 Web 面板。
+
 MCSManager 的管理端口默认只监听 NUC 的 `127.0.0.1`。你手动创建游戏实例时，也建议把宿主机端口绑定到 `127.0.0.1`，这样 Sakura Frp 隧道本地地址统一填 `127.0.0.1` 即可。
+
+更多节点连接排错见 `docs/MCSMANAGER_NETWORK.md`。
 
 ## `.env` 配置
 
