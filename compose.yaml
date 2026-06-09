@@ -1,0 +1,48 @@
+name: ${COMPOSE_PROJECT_NAME:-game-panel}
+
+x-default-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-10m}
+    max-file: "${LOG_MAX_FILE:-3}"
+
+services:
+  mcsm-web:
+    image: githubyumao/mcsmanager-web:${MCSM_IMAGE_TAG:-latest}
+    container_name: ${COMPOSE_PROJECT_NAME:-game-panel}-mcsm-web
+    restart: unless-stopped
+    depends_on:
+      - mcsm-daemon
+    ports:
+      - "${MCSM_WEB_BIND:-127.0.0.1}:${MCSM_WEB_PORT:-23333}:23333/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${MCSM_ROOT:?Set MCSM_ROOT in .env or run scripts/init-env.sh}/mcsmanager/web/data:/opt/mcsmanager/web/data
+      - ${MCSM_ROOT:?Set MCSM_ROOT in .env or run scripts/init-env.sh}/mcsmanager/web/logs:/opt/mcsmanager/web/logs
+    networks:
+      - game-panel
+    logging: *default-logging
+
+  mcsm-daemon:
+    image: githubyumao/mcsmanager-daemon:${MCSM_IMAGE_TAG:-latest}
+    container_name: ${COMPOSE_PROJECT_NAME:-game-panel}-mcsm-daemon
+    restart: unless-stopped
+    ports:
+      - "${MCSM_DAEMON_BIND:-127.0.0.1}:${MCSM_DAEMON_PORT:-24444}:24444/tcp"
+    environment:
+      MCSM_DOCKER_WORKSPACE_PATH: ${MCSM_INSTANCE_ROOT:?Set MCSM_INSTANCE_ROOT in .env or run scripts/init-env.sh}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # If the target host does not provide /etc/timezone, remove this bind.
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${MCSM_ROOT:?Set MCSM_ROOT in .env or run scripts/init-env.sh}/mcsmanager/daemon/data:/opt/mcsmanager/daemon/data
+      - ${MCSM_ROOT:?Set MCSM_ROOT in .env or run scripts/init-env.sh}/mcsmanager/daemon/logs:/opt/mcsmanager/daemon/logs
+      - ${MCSM_INSTANCE_ROOT:?Set MCSM_INSTANCE_ROOT in .env or run scripts/init-env.sh}:/opt/mcsmanager/daemon/data/InstanceData
+    networks:
+      - game-panel
+    logging: *default-logging
+
+networks:
+  game-panel:
+    name: ${GAME_NETWORK_NAME:-game-panel}
