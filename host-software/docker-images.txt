@@ -1,0 +1,14 @@
+# Docker images to pre-pull or rebuild on a new host.
+# Keep this list high-level. Do not export every local image/cache layer.
+#
+# Minecraft Java default strategy:
+# - Java 8: old Forge and many 1.12-1.16 modded servers.
+# - Java 17: 1.18-1.20.4 and the current 1.20.1 modded pack in this repo.
+# - Java 21: 1.20.5+ / 1.21.x servers.
+# Add Java 11, 16, or 25 only when a specific server/Paper version requires it.
+eclipse-temurin:8-jre
+eclipse-temurin:17-jre
+eclipse-temurin:21-jre
+githubyumao/mcsmanager-web:latest
+githubyumao/mcsmanager-daemon:latest
+githubyumao/steam-game-runtime:latest

@@ -1,0 +1,10 @@
+# name	kind	install_method	package_or_command	installed_version	note
+Docker	core	official-script	docker	Docker version 29.5.3, build d1c06ef	Docker Engine and Compose plugin; bootstrap installs this before MCSManager.
+Codex CLI	dev-tool	official-script	codex	codex-cli 0.139.0	OpenAI Codex CLI; bootstrap installs this with the official installer.
+Visual Studio Code	desktop-app	apt	code	1.124.2-1781225536	Large desktop app; requires Microsoft apt source or official .deb.
+Google Chrome	desktop-app	apt	google-chrome-stable	149.0.7827.114-1	Large desktop app; requires Google apt source or official .deb.
+NoMachine	remote-desktop	apt	nomachine	9.6.3-1	Install from official .deb if apt source is unavailable.
+ToDesk	remote-desktop	apt	todesk	4.8.6.2	Install from official .deb if apt source is unavailable.
+Ghostty	terminal	apt	ghostty	1.3.1-0~ppa2	Terminal app; install only if package is available on the target host.
+Clash Verge	network-tool	apt	clash-verge	2.5.1	Proxy client; install only if package/source is available on the target host.
+cc-switch	dev-tool	apt	cc-switch	3.16.3	CLI helper; install only if package/source is available on the target host.

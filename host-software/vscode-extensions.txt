@@ -1,0 +1,4 @@
+ms-azuretools.vscode-containers
+ms-ceintl.vscode-language-pack-zh-hans
+ms-vscode-remote.remote-containers
+openai.chatgpt

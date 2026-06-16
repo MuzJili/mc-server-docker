@@ -4,21 +4,6 @@
 
 这个仓库不定义任何游戏实例。Minecraft、Terraria 等实例由你在 MCSManager 里手动创建后，再把对应本地端口加进 Sakura Frp 应用程序。
 
-这个项目仍保留 Docker 版 frpc 作为备用方案：
-
-```bash
-docker compose -f compose.yaml -f compose.frp.yml up -d sakura-frpc
-```
-
-或使用脚本：
-
-```bash
-./scripts/frp.sh up
-./scripts/frp.sh logs
-./scripts/frp.sh restart
-./scripts/frp.sh down
-```
-
 ## 隧道规划
 
 先在 Sakura Frp 应用程序或面板里为 NUC 创建 MCSManager 隧道；游戏隧道等实例创建后再添加：
@@ -38,23 +23,6 @@ MCSManager 的 Web 和 Daemon 都需要外部浏览器可访问。只穿透 Web 
 MCSManager 的管理端口默认按局域网模式监听 `0.0.0.0`。如果只想通过 Sakura Frp 或本机访问，可以在 `.env` 里把 `MCSM_WEB_BIND` 和 `MCSM_DAEMON_BIND` 改回 `127.0.0.1`。
 
 更多节点连接排错见 `docs/MCSMANAGER_NETWORK.md`。
-
-## `.env` 配置
-
-如果使用 Sakura Frp 应用程序，不需要填写下面的 `.env` 字段。只有改用 Docker 版 frpc 时，才需要在 Sakura Frp 面板中选中需要启动的隧道，使用“批量操作 -> 配置文件”或隧道配置里的启动参数，复制类似下面的内容：
-
-```text
--f your-access-key:12345,12346,12347
-```
-
-写入 `.env`：
-
-```dotenv
-SAKURA_FRP_TOKEN=your-access-key
-SAKURA_FRP_TUNNEL_IDS=12345,12346,12347
-```
-
-不要把真实访问密钥提交到仓库。
 
 ## NUC 建议
 
